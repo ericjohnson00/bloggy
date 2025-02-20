@@ -28,7 +28,6 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             content TEXT NOT NULL,
-            author TEXT NOT NULL,
             images TEXT,
             created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -47,9 +46,11 @@ def get_posts():
     posts = conn.execute('SELECT * FROM posts ORDER BY created_date DESC').fetchall()
     conn.close()
     
+    # Convert rows to dictionaries
     posts_list = []
     for post in posts:
         post_dict = dict(post)
+        # Convert stored JSON string back to list for images
         post_dict['images'] = json.loads(post_dict['images']) if post_dict['images'] else []
         posts_list.append(post_dict)
     
@@ -72,9 +73,9 @@ def get_post(post_id):
 def create_post():
     title = request.form.get('title')
     content = request.form.get('content')
-    author = request.form.get('author')
     images = []
     
+    # Handle multiple image uploads
     if 'images[]' in request.files:
         files = request.files.getlist('images[]')
         for file in files:
@@ -84,8 +85,8 @@ def create_post():
                 images.append(filename)
     
     conn = get_db()
-    conn.execute('INSERT INTO posts (title, content, author, images) VALUES (?, ?, ?, ?)',
-                (title, content, author, json.dumps(images)))
+    conn.execute('INSERT INTO posts (title, content, images) VALUES (?, ?, ?)',
+                (title, content, json.dumps(images)))
     conn.commit()
     conn.close()
     
@@ -95,12 +96,12 @@ def create_post():
 def update_post(post_id):
     title = request.form.get('title')
     content = request.form.get('content')
-    author = request.form.get('author')
     
     conn = get_db()
     post = conn.execute('SELECT images FROM posts WHERE id = ?', (post_id,)).fetchone()
     current_images = json.loads(post['images']) if post and post['images'] else []
     
+    # Handle new image uploads
     if 'images[]' in request.files:
         files = request.files.getlist('images[]')
         for file in files:
@@ -109,8 +110,8 @@ def update_post(post_id):
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 current_images.append(filename)
     
-    conn.execute('UPDATE posts SET title = ?, content = ?, author = ?, images = ? WHERE id = ?',
-                (title, content, author, json.dumps(current_images), post_id))
+    conn.execute('UPDATE posts SET title = ?, content = ?, images = ? WHERE id = ?',
+                (title, content, json.dumps(current_images), post_id))
     conn.commit()
     conn.close()
     
@@ -120,9 +121,11 @@ def update_post(post_id):
 def delete_post(post_id):
     conn = get_db()
     
+    # Get images to delete
     post = conn.execute('SELECT images FROM posts WHERE id = ?', (post_id,)).fetchone()
     if post and post['images']:
         images = json.loads(post['images'])
+        # Delete image files
         for image in images:
             try:
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], image))

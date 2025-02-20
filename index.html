@@ -5,6 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blog</title>
     <link rel="stylesheet" href="/static/style.css" />
+    <style>
+      /* Add these styles directly in the head to override or add to your style.css */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        overflow-y: auto;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 40px auto;
+        padding: 2rem;
+        width: 90%;
+        max-width: 800px;
+        border-radius: 8px;
+        position: relative;
+        box-sizing: border-box;
+      }
+
+      .post-content {
+        line-height: 1.6;
+        margin: 1rem 0;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+      }
+
+      .post-images img {
+        max-width: 100%;
+        height: auto;
+        margin: 10px 0;
+        border-radius: 4px;
+      }
+
+      .close {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        font-size: 2rem;
+        cursor: pointer;
+        line-height: 1;
+        padding: 5px;
+        z-index: 1000;
+      }
+
+      .close:hover {
+        color: #666;
+      }
+
+      /* Ensure the modal content has proper padding at the bottom */
+      #modal-post-content {
+        padding-bottom: 2rem;
+      }
+
+      /* Add some spacing after the last image */
+      .post-images {
+        margin-bottom: 2rem;
+      }
+
+      /* Ensure proper spacing for the post meta information */
+      .post-meta {
+        margin: 1rem 0;
+        color: #666;
+      }
+
+      .post-meta .author {
+        margin-right: 1rem;
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -80,10 +155,24 @@
             `;
 
         modal.style.display = "block";
+
+        // Prevent body scrolling when modal is open
+        document.body.style.overflow = "hidden";
       }
 
+      // Updated close function to restore body scrolling
       document.querySelector(".close").onclick = function () {
         document.getElementById("post-modal").style.display = "none";
+        document.body.style.overflow = "auto";
+      };
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        const modal = document.getElementById("post-modal");
+        if (event.target == modal) {
+          modal.style.display = "none";
+          document.body.style.overflow = "auto";
+        }
       };
 
       document.addEventListener("DOMContentLoaded", loadPosts);
