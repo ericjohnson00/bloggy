@@ -16,7 +16,6 @@
       <div id="posts-container" class="posts-grid"></div>
     </main>
 
-    <!-- Post Modal -->
     <div id="post-modal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
@@ -25,7 +24,6 @@
     </div>
 
     <script>
-      // Fetch and display posts
       async function loadPosts() {
         const response = await fetch("/api/posts");
         const posts = await response.json();
@@ -42,16 +40,18 @@
                     }
                     <h2>${post.title}</h2>
                     <p>${post.content.substring(0, 150)}...</p>
-                    <span class="date">${new Date(
-                      post.created_date
-                    ).toLocaleDateString()}</span>
+                    <div class="post-meta">
+                        <span class="author">By ${post.author}</span>
+                        <span class="date">${new Date(
+                          post.created_date
+                        ).toLocaleDateString()}</span>
+                    </div>
                 </div>
             `
           )
           .join("");
       }
 
-      // Open post modal
       async function openPost(id) {
         const response = await fetch(`/api/post/${id}`);
         const post = await response.json();
@@ -61,6 +61,12 @@
 
         content.innerHTML = `
                 <h2>${post.title}</h2>
+                <div class="post-meta">
+                    <span class="author">By ${post.author}</span>
+                    <span class="date">${new Date(
+                      post.created_date
+                    ).toLocaleDateString()}</span>
+                </div>
                 <div class="post-images">
                     ${post.images
                       .map(
@@ -71,20 +77,15 @@
                       .join("")}
                 </div>
                 <div class="post-content">${post.content}</div>
-                <div class="post-date">Posted on ${new Date(
-                  post.created_date
-                ).toLocaleDateString()}</div>
             `;
 
         modal.style.display = "block";
       }
 
-      // Close modal
       document.querySelector(".close").onclick = function () {
         document.getElementById("post-modal").style.display = "none";
       };
 
-      // Load posts when page loads
       document.addEventListener("DOMContentLoaded", loadPosts);
     </script>
   </body>
