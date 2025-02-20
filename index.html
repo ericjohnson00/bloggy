@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>My Blog</h1>
+      <a href="/admin" class="admin-link">Admin Panel</a>
+    </header>
+
+    <main>
+      <div id="posts-container" class="posts-grid"></div>
+    </main>
+
+    <!-- Post Modal -->
+    <div id="post-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modal-post-content"></div>
+      </div>
+    </div>
+
+    <script>
+      // Fetch and display posts
+      async function loadPosts() {
+        const response = await fetch("/api/posts");
+        const posts = await response.json();
+
+        const container = document.getElementById("posts-container");
+        container.innerHTML = posts
+          .map(
+            (post) => `
+                <div class="post-card" onclick="openPost(${post.id})">
+                    ${
+                      post.images && post.images.length > 0
+                        ? `<img src="/static/uploads/${post.images[0]}" alt="Post image" class="post-thumbnail">`
+                        : ""
+                    }
+                    <h2>${post.title}</h2>
+                    <p>${post.content.substring(0, 150)}...</p>
+                    <span class="date">${new Date(
+                      post.created_date
+                    ).toLocaleDateString()}</span>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Open post modal
+      async function openPost(id) {
+        const response = await fetch(`/api/post/${id}`);
+        const post = await response.json();
+
+        const modal = document.getElementById("post-modal");
+        const content = document.getElementById("modal-post-content");
+
+        content.innerHTML = `
+                <h2>${post.title}</h2>
+                <div class="post-images">
+                    ${post.images
+                      .map(
+                        (img) => `
+                        <img src="/static/uploads/${img}" alt="Post image">
+                    `
+                      )
+                      .join("")}
+                </div>
+                <div class="post-content">${post.content}</div>
+                <div class="post-date">Posted on ${new Date(
+                  post.created_date
+                ).toLocaleDateString()}</div>
+            `;
+
+        modal.style.display = "block";
+      }
+
+      // Close modal
+      document.querySelector(".close").onclick = function () {
+        document.getElementById("post-modal").style.display = "none";
+      };
+
+      // Load posts when page loads
+      document.addEventListener("DOMContentLoaded", loadPosts);
+    </script>
+  </body>
+</html>
