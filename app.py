@@ -9,7 +9,8 @@ import pytz
 app = Flask(__name__)
 
 # Configuration
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
+DATABASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -42,7 +43,7 @@ def init_db():
     conn.close()
 
 def get_db():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DATABASE_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -159,6 +160,7 @@ def admin():
 def serve_static(filename):
     return send_from_directory('static', filename)
 
+# Remove or modify these lines at the bottom
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(debug=True) # remove debug=True before deploying

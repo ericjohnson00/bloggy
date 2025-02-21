@@ -3,126 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blog</title>
+    <title>🤘 SwamPStoner 🤘</title>
+    <script defer src="/static/script.js"></script>
     <link rel="stylesheet" href="/static/style.css" />
-    <style>
-      /* Add these styles directly in the head to override or add to your style.css */
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        overflow-y: auto;
-        padding: 20px;
-        box-sizing: border-box;
-      }
-
-      .modal-content {
-        background-color: white;
-        margin: 40px auto;
-        padding: 2rem;
-        width: 90%;
-        max-width: 800px;
-        border-radius: 8px;
-        position: relative;
-        box-sizing: border-box;
-      }
-
-      .post-content {
-        line-height: 1.6;
-        margin: 1rem 0;
-        overflow-wrap: break-word;
-        word-wrap: break-word;
-      }
-
-      .post-images img {
-        max-width: 100%;
-        height: auto;
-        margin: 10px 0;
-        border-radius: 4px;
-      }
-
-      .close {
-        position: absolute;
-        right: 1rem;
-        top: 1rem;
-        font-size: 2rem;
-        cursor: pointer;
-        line-height: 1;
-        padding: 5px;
-        z-index: 1000;
-      }
-
-      .close:hover {
-        color: #666;
-      }
-
-      /* Ensure the modal content has proper padding at the bottom */
-      #modal-post-content {
-        padding-bottom: 2rem;
-      }
-
-      /* Add some spacing after the last image */
-      .post-images {
-        margin-bottom: 2rem;
-      }
-
-      /* Ensure proper spacing for the post meta information */
-      .post-meta {
-        margin: 1rem 0;
-        color: #666;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .post-meta .author {
-        margin-right: 1rem;
-      }
-
-      .post-meta .date {
-        font-size: 0.9rem;
-      }
-
-      /* Card styles */
-      .post-card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        cursor: pointer;
-        transition: box-shadow 0.3s ease;
-      }
-
-      .post-card:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-
-      .post-card h2 {
-        margin: 0 0 0.5rem 0;
-      }
-
-      .post-card p {
-        margin: 0 0 1rem 0;
-        color: #555;
-      }
-
-      .post-thumbnail {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        border-radius: 4px;
-        margin-bottom: 1rem;
-      }
-    </style>
+    <link rel="stylesheet" href="/static/nav.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Creepster&family=Silkscreen:wght@400;700&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/ad3ef7551b.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <header>
-      <h1>My Blog</h1>
-      <a href="/admin" class="admin-link">Admin Panel</a>
+      <nav>
+        <div class="logo">
+          <a href="index.html"><p>SWAMP STONER</p> </a>
+        </div>
+
+        <!-- Desktop Nav Links -->
+        <div class="nav-links">
+          <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="episodes.html">BLOG</a></li>
+            <li><a href="games.html">LINKS</a></li>
+            <li><a href="#">ABOUT</a></li>
+            <li><a href="#">CONTACT</a></li>
+          </ul>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div class="nav-menu">
+          <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="episodes.html">BLOG</a></li>
+            <li><a href="games.html">LINKS</a></li>
+            <li><a href="#">ABOUT</a></li>
+            <li><a href="#">CONTACT</a></li>
+          </ul>
+        </div>
+
+        <div class="hamburger">
+          <div class="bar bar1"></div>
+          <div class="bar bar2"></div>
+          <div class="bar bar3"></div>
+        </div>
+      </nav>
     </header>
 
     <main>
@@ -135,6 +65,37 @@
         <div id="modal-post-content"></div>
       </div>
     </div>
+
+    <!--  -->
+
+    <!-- Add this before the posts-container div in the main section -->
+    <div class="post-form-container">
+      <button id="new-post-btn" class="btn">Create New Post</button>
+
+      <div id="post-form" class="modal">
+        <div class="modal-content">
+          <span class="close-form">&times;</span>
+          <form id="create-post-form">
+            <input type="text" name="title" placeholder="Title" required />
+            <input type="text" name="author" placeholder="Author" required />
+            <textarea name="content" placeholder="Content" required></textarea>
+            <div class="image-upload">
+              <label for="images">Images (optional):</label>
+              <input
+                type="file"
+                name="images[]"
+                id="images"
+                multiple
+                accept="image/*"
+              />
+            </div>
+            <button type="submit">Post</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!--  -->
 
     <script>
       async function loadPosts() {
@@ -218,6 +179,53 @@
       };
 
       document.addEventListener("DOMContentLoaded", loadPosts);
+    </script>
+
+    <!-- filepath: /c:/projects/bloggy/index.html -->
+    <script>
+      // ...existing code...
+
+      // Post Form Functionality
+      const newPostBtn = document.getElementById("new-post-btn");
+      const postForm = document.getElementById("post-form");
+      const closeForm = document.querySelector(".close-form");
+
+      newPostBtn.onclick = function () {
+        postForm.style.display = "block";
+        document.body.style.overflow = "hidden";
+      };
+
+      closeForm.onclick = function () {
+        postForm.style.display = "none";
+        document.body.style.overflow = "auto";
+      };
+
+      document.getElementById("create-post-form").onsubmit = async function (
+        e
+      ) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        try {
+          const response = await fetch("/api/post", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (response.ok) {
+            postForm.style.display = "none";
+            document.body.style.overflow = "auto";
+            this.reset();
+            loadPosts(); // Refresh the posts
+          } else {
+            alert("Error creating post");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error creating post");
+        }
+      };
     </script>
   </body>
 </html>

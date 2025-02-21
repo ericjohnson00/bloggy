@@ -1,0 +1,3 @@
+PassengerEnabled On
+PassengerAppRoot "/swamp"  # Adjust the path!
+PassengerStartupFile "passenger_wsgi.py"
