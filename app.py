@@ -28,6 +28,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             content TEXT NOT NULL,
+            author TEXT NOT NULL,  -- Added author column
             images TEXT,
             created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -73,6 +74,7 @@ def get_post(post_id):
 def create_post():
     title = request.form.get('title')
     content = request.form.get('content')
+    author = request.form.get('author')  # Added author field
     images = []
     
     # Handle multiple image uploads
@@ -85,8 +87,8 @@ def create_post():
                 images.append(filename)
     
     conn = get_db()
-    conn.execute('INSERT INTO posts (title, content, images) VALUES (?, ?, ?)',
-                (title, content, json.dumps(images)))
+    conn.execute('INSERT INTO posts (title, content, author, images) VALUES (?, ?, ?, ?)',
+                (title, content, author, json.dumps(images)))  # Updated to include author
     conn.commit()
     conn.close()
     
@@ -96,6 +98,7 @@ def create_post():
 def update_post(post_id):
     title = request.form.get('title')
     content = request.form.get('content')
+    author = request.form.get('author')  # Added author field
     
     conn = get_db()
     post = conn.execute('SELECT images FROM posts WHERE id = ?', (post_id,)).fetchone()
@@ -110,8 +113,8 @@ def update_post(post_id):
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 current_images.append(filename)
     
-    conn.execute('UPDATE posts SET title = ?, content = ?, images = ? WHERE id = ?',
-                (title, content, json.dumps(current_images), post_id))
+    conn.execute('UPDATE posts SET title = ?, content = ?, author = ?, images = ? WHERE id = ?',
+                (title, content, author, json.dumps(current_images), post_id))  # Updated to include author
     conn.commit()
     conn.close()
     
