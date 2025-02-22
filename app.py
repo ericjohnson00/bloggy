@@ -183,6 +183,27 @@ def admin():
 def serve_static(filename):
     return send_from_directory('static', filename)
 
+
+
+@app.route('/api/posts/all')
+def get_all_posts():
+    conn = get_db()
+    posts = conn.execute('SELECT * FROM posts ORDER BY created_date DESC').fetchall()
+    conn.close()
+    
+    # Convert rows to dictionaries
+    posts_list = []
+    for post in posts:
+        post_dict = dict(post)
+        post_dict['images'] = json.loads(post_dict['images']) if post_dict['images'] else []
+        posts_list.append(post_dict)
+    
+    return jsonify(posts_list)
+
+
+
+
+
 # Remove or modify these lines at the bottom
 if __name__ == '__main__':
     init_db()

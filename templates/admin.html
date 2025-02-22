@@ -212,33 +212,34 @@
       }
 
       // Load existing posts
+      // In admin.html, update the loadPosts function
       async function loadPosts() {
-        const response = await fetch("/api/posts");
+        const response = await fetch("/api/posts/all"); // Use the new endpoint
         const posts = await response.json();
 
         const postsList = document.getElementById("postsList");
         postsList.innerHTML = posts
           .map(
             (post) => `
-                <div class="post-item">
-                    <div class="post-info">
-                        <h3>${post.title}</h3>
-                        <div class="post-meta">
-                            By ${post.author} - ${new Date(
+          <div class="post-item">
+              <div class="post-info">
+                  <h3>${post.title}</h3>
+                  <div class="post-meta">
+                      By ${post.author} - ${new Date(
               post.created_date
             ).toLocaleDateString()}
-                        </div>
-                    </div>
-                    <div class="button-group">
-                        <button onclick="editPost(${
-                          post.id
-                        })" class="save-btn">Edit</button>
-                        <button onclick="deletePost(${
-                          post.id
-                        })" class="delete-btn">Delete</button>
-                    </div>
-                </div>
-            `
+                  </div>
+              </div>
+              <div class="button-group">
+                  <button onclick="editPost(${
+                    post.id
+                  })" class="save-btn">Edit</button>
+                  <button onclick="deletePost(${
+                    post.id
+                  })" class="delete-btn">Delete</button>
+              </div>
+          </div>
+      `
           )
           .join("");
       }
