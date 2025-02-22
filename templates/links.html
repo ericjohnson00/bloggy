@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Links - SwamPStoner</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/nav.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Creepster&family=Silkscreen:wght@400;700&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/ad3ef7551b.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <a href="{{ url_for('index') }}"><p>SWAMP STONER</p></a>
+        </div>
+
+        <div class="nav-links">
+          <ul>
+            <li><a href="{{ url_for('index') }}">HOME</a></li>
+            <li><a href="{{ url_for('contact') }}">TERMINAL</a></li>
+            <li><a href="{{ url_for('links') }}">LINKS</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-menu">
+          <ul>
+            <li><a href="{{ url_for('index') }}">HOME</a></li>
+            <li><a href="{{ url_for('contact') }}">TERMINAL</a></li>
+            <li><a href="{{ url_for('links') }}">LINKS</a></li>
+          </ul>
+        </div>
+
+        <div class="hamburger">
+          <div class="bar bar1"></div>
+          <div class="bar bar2"></div>
+          <div class="bar bar3"></div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="links-container">
+      <h1>Useful Links</h1>
+      <div class="links-grid">
+        <a
+          href="https://github.com/yourusername"
+          class="link-card"
+          target="_blank"
+        >
+          <i class="fab fa-github"></i>
+          <h3>GitHub</h3>
+          <p>Check out my code repositories</p>
+        </a>
+
+        <a
+          href="https://linkedin.com/in/yourusername"
+          class="link-card"
+          target="_blank"
+        >
+          <i class="fab fa-linkedin"></i>
+          <h3>LinkedIn</h3>
+          <p>Connect with me professionally</p>
+        </a>
+
+        <a
+          href="https://twitter.com/yourusername"
+          class="link-card"
+          target="_blank"
+        >
+          <i class="fab fa-twitter"></i>
+          <h3>Twitter</h3>
+          <p>Follow me for updates</p>
+        </a>
+
+        <!-- Add more link cards as needed -->
+      </div>
+    </main>
+
+    <script>
+      // Hamburger menu functionality
+      const hamburger = document.querySelector(".hamburger");
+      const navMenu = document.querySelector(".nav-menu");
+
+      hamburger.addEventListener("click", () => {
+        hamburger.classList.toggle("active");
+        navMenu.classList.toggle("active");
+      });
+    </script>
+  </body>
+</html>

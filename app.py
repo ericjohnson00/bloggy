@@ -7,11 +7,15 @@ import json
 import pytz
 
 from flask_mail import Mail, Message
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
 
 # Configuration
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
+# In app.py
 DATABASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -22,13 +26,19 @@ TIMEZONE = pytz.timezone('America/Chicago')  # Central Time
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'ericjohnson8055@gmail.com'
-app.config['MAIL_PASSWORD'] = 'your-app-specific-password'  # You'll need to generate this in Google Account settings
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  # Your Gmail address
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  # Your App Password
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
+
 mail = Mail(app)
 
 # Ensure upload directory exists
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+# Security configurations
+# app.config['SERVER_NAME'] = 'swampstoner.com'
+# app.config['PREFERRED_URL_SCHEME'] = 'https'
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -181,9 +191,23 @@ def delete_post(post_id):
     
     return jsonify({'success': True})
 
+# @app.route('/')
+# def index():
+#     return send_from_directory('.', 'index.html')
+
+# Keep these routes
+@app.route('/links')
+def links():
+    return render_template('links.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+# Keep this route (this is the one we want to use)
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    return render_template('index.html')
 
 @app.route('/admin')
 def admin():
@@ -216,35 +240,27 @@ def get_all_posts():
 # Add this new route:
 @app.route('/api/send-message', methods=['POST'])
 def send_message():
-    data = request.json
-    name = data.get('name')
-    email = data.get('email')
-    message = data.get('message')
-    
     try:
+        data = request.json
         msg = Message('New Message from SwamPStoner Blog',
-                     sender=email,
-                     recipients=['ericjohnson8055@gmail.com'])
+                     sender=app.config['MAIL_DEFAULT_SENDER'],
+                     recipients=[app.config['MAIL_USERNAME']])
+        
         msg.body = f"""
-        Name: {name}
-        Email: {email}
+        New message from SwamPStoner Blog:
+        
+        Name: {data.get('name')}
+        Email: {data.get('email')}
         Message:
-        {message}
+        {data.get('message')}
         """
+        
         mail.send(msg)
         return jsonify({'success': True})
     except Exception as e:
+        print(f"Error sending email: {str(e)}")  # For debugging
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
-
-
-
-
-# Remove or modify these lines at the bottom
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True) # remove debug=True before deploying
+    app.run(debug=True)

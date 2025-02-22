@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Terminal - SwamPStoner</title>
     <link rel="stylesheet" href="/static/nav.css" />
-    link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/style.css" />
     <script defer src="/static/script.js"></script>
     <style>
       body {
@@ -16,11 +16,12 @@
         padding: 0;
         height: 100vh;
         overflow: hidden;
+        padding-top: 20px;
       }
 
       .terminal {
         width: 90%;
-        max-width: 800px;
+        max-width: 1100px;
         margin: 2rem auto;
         padding: 1rem;
         background-color: #000;
@@ -34,26 +35,6 @@
       .terminal-output {
         margin-bottom: 1rem;
         white-space: pre-wrap;
-      }
-
-      .cursor {
-        display: inline-block;
-        width: 8px;
-        height: 15px;
-        background-color: #00ff00;
-        animation: blink 1s infinite;
-        margin-left: 4px;
-      }
-
-      @keyframes blink {
-        0%,
-        49% {
-          opacity: 1;
-        }
-        50%,
-        100% {
-          opacity: 0;
-        }
       }
 
       .input-line {
@@ -75,6 +56,7 @@
         font-size: 1rem;
         width: 100%;
         outline: none;
+        caret-color: #00ff00;
       }
 
       .terminal input::placeholder {
@@ -102,28 +84,22 @@
     <header>
       <nav>
         <div class="logo">
-          <a href="index.html"><p>SWAMP STONER</p> </a>
+          <a href="{{ url_for('index') }}"><p>SWAMP STONER</p> </a>
         </div>
 
-        <!-- Desktop Nav Links -->
         <div class="nav-links">
           <ul>
-            <li><a href="index.html">HOME</a></li>
-            <li><a href="episodes.html">BLOG</a></li>
-            <li><a href="games.html">LINKS</a></li>
-            <li><a href="#">ABOUT</a></li>
-            <li><a href="#">CONTACT</a></li>
+            <li><a href="{{ url_for('index') }}">HOME</a></li>
+            <li><a href="{{ url_for('contact') }}">TERMINAL</a></li>
+            <li><a href="{{ url_for('links') }}">LINKS</a></li>
           </ul>
         </div>
 
-        <!-- Mobile Nav Menu -->
         <div class="nav-menu">
           <ul>
-            <li><a href="index.html">HOME</a></li>
-            <li><a href="episodes.html">BLOG</a></li>
-            <li><a href="games.html">LINKS</a></li>
-            <li><a href="#">ABOUT</a></li>
-            <li><a href="#">CONTACT</a></li>
+            <li><a href="{{ url_for('index') }}">HOME</a></li>
+            <li><a href="{{ url_for('contact') }}">TERMINAL</a></li>
+            <li><a href="{{ url_for('links') }}">LINKS</a></li>
           </ul>
         </div>
 
@@ -137,17 +113,18 @@
 
     <div class="terminal" id="terminal">
       <div class="terminal-output ascii-art">
-        ________ ___ ___ ________ _____ ______ ________ ________ _________
-        ________ ________ _______ ________ |\ ____\|\ \|\ \|\ __ \|\ _ \ _ \|\
-        __ \|\ ____\|\___ ___\\ __ \|\ ___ \|\ ___ \ |\ __ \ \ \ \___|\ \ \\\ \
-        \ \|\ \ \ \\\__\ \ \ \ \|\ \ \ \___|\|___ \ \_\ \ \|\ \ \ \\ \ \ \ __/|\
-        \ \|\ \ \ \_____ \ \ __ \ \ __ \ \ \\|__| \ \ \ ____\ \_____ \ \ \ \ \ \
-        \\\ \ \ \\ \ \ \ \_|/_\ \ _ _\ \|____|\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
-        \___|\|____|\ \ \ \ \ \ \ \\\ \ \ \\ \ \ \ \_|\ \ \ \\ \| ____\_\ \ \__\
-        \__\ \__\ \__\ \__\ \ \__\ \__\ ____\_\ \ \ \__\ \ \_______\ \__\\ \__\
-        \_______\ \__\\ _\ |\_________\|__|\|__|\|__|\|__|\|__| \|__|\|__|
-        |\_________\ \|__| \|_______|\|__| \|__|\|_______|\|__|\|__|
-        \|_________| \|_________|
+        <pre>
+              ________  ___  ___  ________  _____ ______   ________  ________  _________  ________  ________   _______   ________     
+              |\   ____\|\  \|\  \|\   __  \|\   _ \  _   \|\   __  \|\   ____\|\___   ___\\   __  \|\   ___  \|\  ___ \ |\   __  \    
+              \ \  \___|\ \  \\\  \ \  \|\  \ \  \\\__\ \  \ \  \|\  \ \  \___|\|___ \  \_\ \  \|\  \ \  \\ \  \ \   __/|\ \  \|\  \   
+               \ \_____  \ \   __  \ \   __  \ \  \\|__| \  \ \   ____\ \_____  \   \ \  \ \ \  \\\  \ \  \\ \  \ \  \_|/_\ \   _  _\  
+                \|____|\  \ \  \ \  \ \  \ \  \ \  \    \ \  \ \  \___|\|____|\  \   \ \  \ \ \  \\\  \ \  \\ \  \ \  \_|\ \ \  \\  \| 
+                  ____\_\  \ \__\ \__\ \__\ \__\ \__\    \ \__\ \__\     ____\_\  \   \ \__\ \ \_______\ \__\\ \__\ \_______\ \__\\ _\ 
+                 |\_________\|__|\|__|\|__|\|__|\|__|     \|__|\|__|    |\_________\   \|__|  \|_______|\|__| \|__|\|_______|\|__|\|__|
+                 \|_________|                                            \|_________|                                                     
+                    
+            </pre
+        >
       </div>
       <div class="terminal-output info">
         Welcome to SwamPStoner Terminal v1.0.0 Type 'help' for available
@@ -159,7 +136,6 @@
       <div class="input-line">
         <span class="prompt">swampstoner@terminal:~$</span>
         <input type="text" id="terminal-input" autofocus />
-        <span class="cursor"></span>
       </div>
     </div>
 
@@ -174,22 +150,21 @@
         message: "",
       };
 
-      // Command history
       let commandHistory = [];
       let historyIndex = -1;
 
       const commands = {
         help:
           "Available commands:\n" +
-          "  contact  - Start contact form\n" +
-          "  clear    - Clear terminal\n" +
-          "  about    - About SwamPStoner\n" +
-          "  socials  - Social media links\n" +
-          "  quote    - Random quote\n" +
-          "  time     - Current time\n" +
-          "  history  - Command history\n" +
-          "  banner   - Show banner\n" +
-          "  help     - Show this help",
+          "  contact   - Start contact form\n" +
+          "  clear     - Clear terminal\n" +
+          "  about     - About SwamPStoner\n" +
+          "  socials   - Social media links\n" +
+          "  quote     - Random quote\n" +
+          "  time      - Current time\n" +
+          "  history   - Command history\n" +
+          "  banner    - Show banner\n" +
+          "  help      - Show this help",
         clear: "Clearing terminal...",
         contact: "Starting contact form...",
         about: "SwamPStoner - A blog about music, gaming, and life.",
@@ -205,7 +180,6 @@
         "Life is what happens while you're busy making other plans.",
       ];
 
-      // Handle arrow keys for command history
       input.addEventListener("keydown", function (e) {
         if (e.key === "ArrowUp") {
           e.preventDefault();
@@ -243,7 +217,9 @@
             handleContactForm(command);
           }
 
-          terminal.scrollTop = terminal.scrollHeight;
+          requestAnimationFrame(() => {
+            terminal.scrollTop = terminal.scrollHeight;
+          });
         }
       });
 
@@ -312,7 +288,7 @@
       }
 
       function displayBanner() {
-        const banner = document.querySelector(".ascii-art").innerHTML;
+        const banner = document.querySelector(".ascii-art pre").innerHTML;
         addToOutput(banner, "ascii-art");
       }
 

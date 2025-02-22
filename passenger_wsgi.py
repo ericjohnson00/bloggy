@@ -1,17 +1,11 @@
-import sys
 import os
+import sys
+import importlib.util
 
-# If you have a virtual environment:
-# INTERP = os.path.expanduser("/path/to/your/venv/bin/python3")  # Adjust the path!
-# if sys.executable != INTERP:
-#     os.execl(INTERP, INTERP, *sys.argv)
+sys.path.insert(0, os.path.dirname(__file__))
 
-# Add the project directory to the Python path
-sys.path.append(os.getcwd()) # This is usually enough for Namecheap
+spec = importlib.util.spec_from_file_location("wsgi", "app.py")
+wsgi = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(wsgi)
 
-from app import app as application # Your Flask app
-
-# If you need to initialize something when Passenger starts:
-# def application(environ, start_response):
-#     # ... your initialization code here ...
-#     return app(environ, start_response)
+application = wsgi.app
