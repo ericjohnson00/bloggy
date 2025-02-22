@@ -106,3 +106,95 @@ document.getElementById("next-page").addEventListener("click", () => {
   currentPage++;
   loadPosts(currentPage);
 });
+
+async function openPost(id) {
+  const response = await fetch(`/api/post/${id}`);
+  const post = await response.json();
+
+  const modal = document.getElementById("post-modal");
+  const content = document.getElementById("modal-post-content");
+
+  content.innerHTML = `
+    <h2>${post.title}</h2>
+    <div class="post-meta">
+      <span class="author">By ${post.author}</span>
+      <span class="date">${new Date(post.created_date).toLocaleString("en-US", {
+        timeZone: "America/Chicago",
+      })}</span>
+    </div>
+    <div class="post-images">
+      ${post.images
+        .map(
+          (img) => `
+          <img src="/static/uploads/${img}" alt="Post image">
+      `
+        )
+        .join("")}
+    </div>
+    <div class="post-content">${post.content}</div>
+  `;
+
+  modal.style.display = "block";
+  document.body.style.overflow = "hidden";
+}
+
+// Modal functionality
+document.addEventListener("DOMContentLoaded", () => {
+  const newPostBtn = document.getElementById("new-post-btn");
+  const postForm = document.getElementById("post-form");
+  const closeForm = document.querySelector(".close-form");
+  const closeModal = document.querySelector(".close");
+
+  // Close modal handlers
+  closeModal.onclick = function () {
+    document.getElementById("post-modal").style.display = "none";
+    document.body.style.overflow = "auto";
+  };
+
+  window.onclick = function (event) {
+    const modal = document.getElementById("post-modal");
+    if (event.target == modal) {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+  };
+
+  // Post form handlers
+  newPostBtn.onclick = function () {
+    postForm.style.display = "block";
+    document.body.style.overflow = "hidden";
+  };
+
+  closeForm.onclick = function () {
+    postForm.style.display = "none";
+    document.body.style.overflow = "auto";
+  };
+
+  // Form submission
+  document.getElementById("create-post-form").onsubmit = async function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    try {
+      const response = await fetch("/api/post", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        postForm.style.display = "none";
+        document.body.style.overflow = "auto";
+        this.reset();
+        loadPosts();
+      } else {
+        alert("Error creating post");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error creating post");
+    }
+  };
+
+  // Load initial posts
+  loadPosts();
+});

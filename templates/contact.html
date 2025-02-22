@@ -4,79 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Terminal - SwamPStoner</title>
-    <link rel="stylesheet" href="/static/nav.css" />
     <link rel="stylesheet" href="/static/style.css" />
     <script defer src="/static/script.js"></script>
+
     <style>
       body {
-        background-color: #000;
-        color: #00ff00;
         font-family: "VT323", monospace;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        overflow: hidden;
-        padding-top: 20px;
-      }
-
-      .terminal {
-        width: 90%;
-        max-width: 1100px;
-        margin: 2rem auto;
-        padding: 1rem;
-        background-color: #000;
-        border: 1px solid #00ff00;
-        box-shadow: 0 0 10px #00ff00;
-        height: calc(100vh - 120px);
-        overflow-y: auto;
-        position: relative;
-      }
-
-      .terminal-output {
-        margin-bottom: 1rem;
-        white-space: pre-wrap;
-      }
-
-      .input-line {
-        display: flex;
-        align-items: center;
-        margin-bottom: 0.5rem;
-      }
-
-      .prompt {
-        color: #00ff00;
-        margin-right: 8px;
-      }
-
-      .terminal input {
-        background: transparent;
-        border: none;
-        color: #00ff00;
-        font-family: "VT323", monospace;
-        font-size: 1rem;
-        width: 100%;
-        outline: none;
-        caret-color: #00ff00;
-      }
-
-      .terminal input::placeholder {
-        color: #00880055;
-      }
-
-      .success {
-        color: #00ff00;
-      }
-      .error {
-        color: #ff0000;
-      }
-      .warning {
-        color: #ffff00;
-      }
-      .info {
-        color: #00ffff;
-      }
-      .ascii-art {
-        color: #ff00ff;
       }
     </style>
   </head>
@@ -114,21 +47,21 @@
     <div class="terminal" id="terminal">
       <div class="terminal-output ascii-art">
         <pre>
-              ________  ___  ___  ________  _____ ______   ________  ________  _________  ________  ________   _______   ________     
-              |\   ____\|\  \|\  \|\   __  \|\   _ \  _   \|\   __  \|\   ____\|\___   ___\\   __  \|\   ___  \|\  ___ \ |\   __  \    
-              \ \  \___|\ \  \\\  \ \  \|\  \ \  \\\__\ \  \ \  \|\  \ \  \___|\|___ \  \_\ \  \|\  \ \  \\ \  \ \   __/|\ \  \|\  \   
-               \ \_____  \ \   __  \ \   __  \ \  \\|__| \  \ \   ____\ \_____  \   \ \  \ \ \  \\\  \ \  \\ \  \ \  \_|/_\ \   _  _\  
-                \|____|\  \ \  \ \  \ \  \ \  \ \  \    \ \  \ \  \___|\|____|\  \   \ \  \ \ \  \\\  \ \  \\ \  \ \  \_|\ \ \  \\  \| 
-                  ____\_\  \ \__\ \__\ \__\ \__\ \__\    \ \__\ \__\     ____\_\  \   \ \__\ \ \_______\ \__\\ \__\ \_______\ \__\\ _\ 
-                 |\_________\|__|\|__|\|__|\|__|\|__|     \|__|\|__|    |\_________\   \|__|  \|_______|\|__| \|__|\|_______|\|__|\|__|
-                 \|_________|                                            \|_________|                                                     
-                    
+           ________  ___       __   ________  _____ ______   ________  ________   _______  _________   
+          |\   ____\|\  \     |\  \|\   __  \|\   _ \  _   \|\   __  \|\   ___  \|\  ___ \|\___   ___\ 
+          \ \  \___|\ \  \    \ \  \ \  \|\  \ \  \\\__\ \  \ \  \|\  \ \  \\ \  \ \   __/\|___ \  \_| 
+           \ \_____  \ \  \  __\ \  \ \   __  \ \  \\|__| \  \ \   ____\ \  \\ \  \ \  \_|/__  \ \  \  
+            \|____|\  \ \  \|\__\_\  \ \  \ \  \ \  \    \ \  \ \  \___|\ \  \\ \  \ \  \_|\ \  \ \  \ 
+              ____\_\  \ \____________\ \__\ \__\ \__\    \ \__\ \__\    \ \__\\ \__\ \_______\  \ \__\
+             |\_________\|____________|\|__|\|__|\|__|     \|__|\|__|     \|__| \|__|\|_______|   \|__|
+             \|_________|                                                                              
+                                                                                                       
+                                         
             </pre
         >
       </div>
       <div class="terminal-output info">
-        Welcome to SwamPStoner Terminal v1.0.0 Type 'help' for available
-        commands.
+        Welcome to SwampNET Terminal v1.0.0 Type 'help' for available commands.
       </div>
 
       <div id="output"></div>
@@ -324,7 +257,8 @@
 
       function addToOutput(text, className = "") {
         const div = document.createElement("div");
-        div.textContent = text;
+        // Replace newline characters with <br> tags
+        div.innerHTML = text.replace(/\n/g, "<br>");
         if (className) {
           div.className = className;
         }
