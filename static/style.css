@@ -134,7 +134,8 @@ nav .nav-menu {
   }
 
   nav .nav-menu ul li {
-    text-align: center;
+    text-align: right;
+    padding-right: 20px;
     list-style: none;
 
     /* padding: 1rem; */
@@ -145,12 +146,12 @@ nav .nav-menu {
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
       1px 1px 0 #000;
     text-decoration: none;
-    /* padding: 1rem; */
+    padding: 1rem 0;
     display: block;
   }
 
   nav .nav-menu ul li a:hover {
-    font-size: 1.3rem;
+    color: #2ecc71;
   }
 
   nav .nav-menu.active {
