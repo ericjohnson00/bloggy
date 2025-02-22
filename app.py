@@ -49,19 +49,42 @@ def get_db():
 
 @app.route('/api/posts')
 def get_posts():
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 6, type=int)  # Number of posts per page
+    
     conn = get_db()
-    posts = conn.execute('SELECT * FROM posts ORDER BY created_date DESC').fetchall()
-    conn.close()
+    
+    # Get total number of posts
+    total_posts = conn.execute('SELECT COUNT(*) FROM posts').fetchone()[0]
+    
+    # Calculate offset
+    offset = (page - 1) * per_page
+    
+    # Get paginated posts
+    posts = conn.execute(
+        'SELECT * FROM posts ORDER BY created_date DESC LIMIT ? OFFSET ?',
+        (per_page, offset)
+    ).fetchall()
     
     # Convert rows to dictionaries
     posts_list = []
     for post in posts:
         post_dict = dict(post)
-        # Convert stored JSON string back to list for images
         post_dict['images'] = json.loads(post_dict['images']) if post_dict['images'] else []
         posts_list.append(post_dict)
     
-    return jsonify(posts_list)
+    # Calculate total pages
+    total_pages = (total_posts + per_page - 1) // per_page
+    
+    conn.close()
+    
+    return jsonify({
+        'posts': posts_list,
+        'total_pages': total_pages,
+        'current_page': page,
+        'per_page': per_page,
+        'total_posts': total_posts
+    })
 
 @app.route('/api/post/<int:post_id>')
 def get_post(post_id):
