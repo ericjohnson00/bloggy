@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terminal - SwamPStoner</title>
+    <link rel="stylesheet" href="/static/nav.css" />
+    link rel="stylesheet" href="/static/style.css" />
+    <script defer src="/static/script.js"></script>
+    <style>
+      body {
+        background-color: #000;
+        color: #00ff00;
+        font-family: "VT323", monospace;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .terminal {
+        width: 90%;
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1rem;
+        background-color: #000;
+        border: 1px solid #00ff00;
+        box-shadow: 0 0 10px #00ff00;
+        height: calc(100vh - 120px);
+        overflow-y: auto;
+        position: relative;
+      }
+
+      .terminal-output {
+        margin-bottom: 1rem;
+        white-space: pre-wrap;
+      }
+
+      .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 15px;
+        background-color: #00ff00;
+        animation: blink 1s infinite;
+        margin-left: 4px;
+      }
+
+      @keyframes blink {
+        0%,
+        49% {
+          opacity: 1;
+        }
+        50%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .input-line {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .prompt {
+        color: #00ff00;
+        margin-right: 8px;
+      }
+
+      .terminal input {
+        background: transparent;
+        border: none;
+        color: #00ff00;
+        font-family: "VT323", monospace;
+        font-size: 1rem;
+        width: 100%;
+        outline: none;
+      }
+
+      .terminal input::placeholder {
+        color: #00880055;
+      }
+
+      .success {
+        color: #00ff00;
+      }
+      .error {
+        color: #ff0000;
+      }
+      .warning {
+        color: #ffff00;
+      }
+      .info {
+        color: #00ffff;
+      }
+      .ascii-art {
+        color: #ff00ff;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <a href="index.html"><p>SWAMP STONER</p> </a>
+        </div>
+
+        <!-- Desktop Nav Links -->
+        <div class="nav-links">
+          <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="episodes.html">BLOG</a></li>
+            <li><a href="games.html">LINKS</a></li>
+            <li><a href="#">ABOUT</a></li>
+            <li><a href="#">CONTACT</a></li>
+          </ul>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div class="nav-menu">
+          <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="episodes.html">BLOG</a></li>
+            <li><a href="games.html">LINKS</a></li>
+            <li><a href="#">ABOUT</a></li>
+            <li><a href="#">CONTACT</a></li>
+          </ul>
+        </div>
+
+        <div class="hamburger">
+          <div class="bar bar1"></div>
+          <div class="bar bar2"></div>
+          <div class="bar bar3"></div>
+        </div>
+      </nav>
+    </header>
+
+    <div class="terminal" id="terminal">
+      <div class="terminal-output ascii-art">
+        ________ ___ ___ ________ _____ ______ ________ ________ _________
+        ________ ________ _______ ________ |\ ____\|\ \|\ \|\ __ \|\ _ \ _ \|\
+        __ \|\ ____\|\___ ___\\ __ \|\ ___ \|\ ___ \ |\ __ \ \ \ \___|\ \ \\\ \
+        \ \|\ \ \ \\\__\ \ \ \ \|\ \ \ \___|\|___ \ \_\ \ \|\ \ \ \\ \ \ \ __/|\
+        \ \|\ \ \ \_____ \ \ __ \ \ __ \ \ \\|__| \ \ \ ____\ \_____ \ \ \ \ \ \
+        \\\ \ \ \\ \ \ \ \_|/_\ \ _ _\ \|____|\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+        \___|\|____|\ \ \ \ \ \ \ \\\ \ \ \\ \ \ \ \_|\ \ \ \\ \| ____\_\ \ \__\
+        \__\ \__\ \__\ \__\ \ \__\ \__\ ____\_\ \ \ \__\ \ \_______\ \__\\ \__\
+        \_______\ \__\\ _\ |\_________\|__|\|__|\|__|\|__|\|__| \|__|\|__|
+        |\_________\ \|__| \|_______|\|__| \|__|\|_______|\|__|\|__|
+        \|_________| \|_________|
+      </div>
+      <div class="terminal-output info">
+        Welcome to SwamPStoner Terminal v1.0.0 Type 'help' for available
+        commands.
+      </div>
+
+      <div id="output"></div>
+
+      <div class="input-line">
+        <span class="prompt">swampstoner@terminal:~$</span>
+        <input type="text" id="terminal-input" autofocus />
+        <span class="cursor"></span>
+      </div>
+    </div>
+
+    <script>
+      const terminal = document.getElementById("terminal");
+      const input = document.getElementById("terminal-input");
+      const output = document.getElementById("output");
+      let currentStep = "start";
+      let contactInfo = {
+        name: "",
+        email: "",
+        message: "",
+      };
+
+      // Command history
+      let commandHistory = [];
+      let historyIndex = -1;
+
+      const commands = {
+        help:
+          "Available commands:\n" +
+          "  contact  - Start contact form\n" +
+          "  clear    - Clear terminal\n" +
+          "  about    - About SwamPStoner\n" +
+          "  socials  - Social media links\n" +
+          "  quote    - Random quote\n" +
+          "  time     - Current time\n" +
+          "  history  - Command history\n" +
+          "  banner   - Show banner\n" +
+          "  help     - Show this help",
+        clear: "Clearing terminal...",
+        contact: "Starting contact form...",
+        about: "SwamPStoner - A blog about music, gaming, and life.",
+        socials:
+          "Find me on:\n  Twitter: @swampstoner\n  Instagram: @swampstoner\n  GitHub: @swampstoner",
+        banner: "Displaying banner...",
+      };
+
+      const quotes = [
+        "Time you enjoy wasting is not wasted time.",
+        "Stay hungry, stay foolish.",
+        "The best time to plant a tree was 20 years ago. The second best time is now.",
+        "Life is what happens while you're busy making other plans.",
+      ];
+
+      // Handle arrow keys for command history
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (historyIndex < commandHistory.length - 1) {
+            historyIndex++;
+            input.value =
+              commandHistory[commandHistory.length - 1 - historyIndex];
+          }
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (historyIndex > 0) {
+            historyIndex--;
+            input.value =
+              commandHistory[commandHistory.length - 1 - historyIndex];
+          } else if (historyIndex === 0) {
+            historyIndex = -1;
+            input.value = "";
+          }
+        }
+      });
+
+      input.addEventListener("keypress", async function (e) {
+        if (e.key === "Enter") {
+          const command = input.value.trim().toLowerCase();
+          if (command) {
+            commandHistory.push(command);
+          }
+          historyIndex = -1;
+          addToOutput(`swampstoner@terminal:~$ ${command}`, "info");
+          input.value = "";
+
+          if (currentStep === "start") {
+            handleInitialCommand(command);
+          } else {
+            handleContactForm(command);
+          }
+
+          terminal.scrollTop = terminal.scrollHeight;
+        }
+      });
+
+      function handleInitialCommand(command) {
+        switch (command) {
+          case "contact":
+            currentStep = "name";
+            addToOutput("Please enter your name:", "info");
+            break;
+          case "help":
+            addToOutput(commands["help"], "info");
+            break;
+          case "clear":
+            output.innerHTML = "";
+            break;
+          case "about":
+            addToOutput(commands["about"], "info");
+            break;
+          case "socials":
+            addToOutput(commands["socials"], "info");
+            break;
+          case "quote":
+            const randomQuote =
+              quotes[Math.floor(Math.random() * quotes.length)];
+            addToOutput(`"${randomQuote}"`, "warning");
+            break;
+          case "time":
+            addToOutput(new Date().toLocaleString(), "success");
+            break;
+          case "history":
+            addToOutput(commandHistory.join("\n"), "info");
+            break;
+          case "banner":
+            displayBanner();
+            break;
+          default:
+            addToOutput(
+              `Command not found: ${command}\nType 'help' for available commands.`,
+              "error"
+            );
+        }
+      }
+
+      async function handleContactForm(input) {
+        switch (currentStep) {
+          case "name":
+            contactInfo.name = input;
+            currentStep = "email";
+            addToOutput("Please enter your email:", "info");
+            break;
+          case "email":
+            if (isValidEmail(input)) {
+              contactInfo.email = input;
+              currentStep = "message";
+              addToOutput("Please enter your message:", "info");
+            } else {
+              addToOutput("Invalid email format. Please try again:", "error");
+            }
+            break;
+          case "message":
+            contactInfo.message = input;
+            addToOutput("Sending message...", "warning");
+            await sendMessage(contactInfo);
+            break;
+        }
+      }
+
+      function displayBanner() {
+        const banner = document.querySelector(".ascii-art").innerHTML;
+        addToOutput(banner, "ascii-art");
+      }
+
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      async function sendMessage(contactInfo) {
+        try {
+          const response = await fetch("/api/send-message", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(contactInfo),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            addToOutput("Message sent successfully!", "success");
+          } else {
+            addToOutput("Error sending message. Please try again.", "error");
+          }
+        } catch (error) {
+          addToOutput("Error sending message. Please try again.", "error");
+        }
+
+        currentStep = "start";
+        contactInfo = { name: "", email: "", message: "" };
+        addToOutput("\nType a command (help for options):", "info");
+      }
+
+      function addToOutput(text, className = "") {
+        const div = document.createElement("div");
+        div.textContent = text;
+        if (className) {
+          div.className = className;
+        }
+        output.appendChild(div);
+      }
+    </script>
+  </body>
+</html>

@@ -6,6 +6,8 @@ from werkzeug.utils import secure_filename
 import json
 import pytz
 
+from flask_mail import Mail, Message
+
 app = Flask(__name__)
 
 # Configuration
@@ -15,6 +17,14 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 TIMEZONE = pytz.timezone('America/Chicago')  # Central Time
+
+# Email configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'ericjohnson8055@gmail.com'
+app.config['MAIL_PASSWORD'] = 'your-app-specific-password'  # You'll need to generate this in Google Account settings
+mail = Mail(app)
 
 # Ensure upload directory exists
 if not os.path.exists(UPLOAD_FOLDER):
@@ -199,6 +209,36 @@ def get_all_posts():
         posts_list.append(post_dict)
     
     return jsonify(posts_list)
+
+
+
+
+# Add this new route:
+@app.route('/api/send-message', methods=['POST'])
+def send_message():
+    data = request.json
+    name = data.get('name')
+    email = data.get('email')
+    message = data.get('message')
+    
+    try:
+        msg = Message('New Message from SwamPStoner Blog',
+                     sender=email,
+                     recipients=['ericjohnson8055@gmail.com'])
+        msg.body = f"""
+        Name: {name}
+        Email: {email}
+        Message:
+        {message}
+        """
+        mail.send(msg)
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 
 
