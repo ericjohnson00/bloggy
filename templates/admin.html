@@ -10,7 +10,54 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js"></script>
   
 
-    <link rel="stylesheet" href="/static/nav.css" />
+    <style>
+
+
+      h1 {
+        font-size: 2rem;
+        margin: 0;
+        padding: 0;
+        color: #fff;
+        text-align: center;
+      }
+
+      h3 {
+        margin: 0;
+        padding: 0;
+        color: #fff;
+      }
+
+      .admin-link {
+        display: block;
+        text-align: center;
+        margin-bottom: 1rem;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .post-editor {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .post-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background-color: #333;
+        color: #fff;
+        max-width: 800px;
+        margin: 0 auto;
+        border: 1px solid #fff;
+      }
+
+
+    </style>
+
+
+
   </head>
   <body>
     <header>
@@ -42,10 +89,11 @@
           <div class="bar bar3"></div>
         </div>
       </nav>
-
-      <h1>Blog Admin</h1>
-      <a href="/" class="admin-link">View Blog</a>
     </header>
+
+
+    <h1>Blog Admin</h1>
+    <a href="/" class="admin-link">View Blog</a>
 
     <div class="admin-container">
       <div class="post-editor">
@@ -80,6 +128,27 @@
     </div>
 
     <script>
+
+const hamburger = document.querySelector(".hamburger");
+const navMenu = document.querySelector(".nav-menu");
+
+hamburger.addEventListener("click", () => {
+  // Toggle active class on hamburger and nav menu
+  hamburger.classList.toggle("active");
+  navMenu.classList.toggle("active");
+});
+
+// Close menu when clicking a link (optional)
+document.querySelectorAll(".nav-menu a").forEach((link) => {
+  link.addEventListener("click", () => {
+    hamburger.classList.remove("active");
+    navMenu.classList.remove("active");
+  });
+});
+
+
+
+
       let currentPostId = null;
       let selectedFiles = [];
 
