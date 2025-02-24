@@ -571,3 +571,9 @@ nav .nav-menu {
   color: #ff00ff;
   font-size: 0.8rem;
 }
+
+@media (max-width: 768px) {
+  .ascii-art {
+    font-size: 0.5rem;
+  }
+}
