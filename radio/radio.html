@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Military Radio Audio Player</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="radio-transmitter">
+      <!-- Audio Player -->
+      <div class="audio-player">
+        <div class="display">
+          <span id="track-title">Loading...</span>
+        </div>
+        <div class="controls">
+          <button id="prev">⏮️</button>
+          <button id="play-pause">▶️</button>
+          <button id="next">⏭️</button>
+        </div>
+        <div class="playlist">
+          <ul id="playlist">
+            <li data-src="audio/track1.mp3">Transmission Log //1920</li>
+            <li data-src="audio/track3.mp3">Classified</li>
+            <li data-src="audio/track3.mp3">Classified</li>
+            <li data-src="audio/track3.mp3">Classified</li>
+            <li data-src="audio/track3.mp3">Classified</li>
+            <li data-src="audio/track3.mp3">Classified</li>
+            <li data-src="audio/track3.mp3">Classified</li>
+            <li data-src="audio/track3.mp3">Classified</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

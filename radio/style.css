@@ -1,0 +1,80 @@
+body {
+  background: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: "Courier New", monospace;
+}
+
+.radio-transmitter {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("images/radio.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.audio-player {
+  background: rgba(0, 0, 0, 0.8);
+  border: 3px solid #ff8c42;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 140, 66, 0.5);
+}
+
+.display {
+  background: #000;
+  color: #ff8c42;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 18px;
+  margin-bottom: 20px;
+  box-shadow: inset 0 0 10px rgba(255, 140, 66, 0.5);
+}
+
+.controls button {
+  background: #ff8c42;
+  border: none;
+  color: #000;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.controls button:hover {
+  background: #ff6f00;
+}
+
+.playlist {
+  margin-top: 20px;
+}
+
+.playlist ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.playlist li {
+  background: rgba(0, 0, 0, 0.7);
+  color: #ff8c42;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.playlist li:hover {
+  background: rgba(255, 140, 66, 0.2);
+}
