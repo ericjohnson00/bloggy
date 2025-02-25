@@ -70,7 +70,7 @@ def get_db():
 @app.route('/api/posts')
 def get_posts():
     page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 6, type=int)  # Now dynamic based on client screen
+    per_page = request.args.get('per_page', 6, type=int)  # Number of posts per page
     
     conn = get_db()
     
