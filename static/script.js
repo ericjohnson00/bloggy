@@ -15,8 +15,36 @@ document.querySelectorAll(".nav-menu a").forEach((link) => {
   });
 });
 
+function calculatePostsPerPage() {
+  const width = window.innerWidth;
+  let columns;
+
+  if (width >= 1400) {
+    columns = 4;
+  } else if (width >= 1024) {
+    columns = 3;
+  } else if (width >= 768) {
+    columns = 2;
+  } else {
+    columns = 1;
+  }
+
+  // Always show 2 rows
+  return columns * 2;
+}
+
 let currentPage = 1;
-const postsPerPage = 6;
+// Replace static postsPerPage with dynamic calculation
+let postsPerPage = calculatePostsPerPage();
+
+// Add window resize listener to update posts per page
+window.addEventListener("resize", () => {
+  const newPostsPerPage = calculatePostsPerPage();
+  if (newPostsPerPage !== postsPerPage) {
+    postsPerPage = newPostsPerPage;
+    loadPosts(currentPage);
+  }
+});
 
 async function loadPosts(page = 1) {
   const response = await fetch(
