@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HLS Stream Player</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+      #video {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        display: block;
+        border: 2px solid #2ecc71;
+        border-radius: 8px;
+        background: #1a1a1a;
+      }
+      #playlist {
+        max-width: 800px;
+        margin: 20px auto;
+        background: #1a1a1a;
+        border: 2px solid #2ecc71;
+        border-radius: 8px;
+        padding: 1rem;
+      }
+      .current-video {
+        background-color: #333;
+        color: #2ecc71;
+        font-weight: bold;
+      }
+      h1 {
+        text-align: center;
+        color: #00ff00;
+        font-family: "Silkscreen", cursive;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+          1px 1px 0 #000;
+      }
+      #playlist div {
+        color: #2ecc71;
+        font-family: "VT323", monospace;
+        font-size: 1.2rem;
+      }
+      #playlist div:hover {
+        background-color: #333;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Add Navigation -->
+    <nav>
+      <div class="logo">
+        <p>Outpost//E-45</p>
+      </div>
+      <div class="nav-links">
+        <ul>
+          <li><a href="{{ url_for('index') }}">HOME</a></li>
+          <li><a href="{{ url_for('terminal') }}">TERMINAL</a></li>
+          <li><a href="{{ url_for('links') }}">LINKS</a></li>
+          <li><a href="{{ url_for('stream') }}">STREAM</a></li>
+        </ul>
+      </div>
+
+      <div class="nav-menu">
+        <ul>
+          <li><a href="{{ url_for('index') }}">HOME</a></li>
+          <li><a href="{{ url_for('terminal') }}">TERMINAL</a></li>
+          <li><a href="{{ url_for('links') }}">LINKS</a></li>
+          <li><a href="{{ url_for('stream') }}">STREAM</a></li>
+        </ul>
+      </div>
+      <div class="hamburger">
+        <span class="bar bar1"></span>
+        <span class="bar bar2"></span>
+        <span class="bar bar3"></span>
+      </div>
+    </nav>
+
+    <h1>Outpost//E-45 Movie Archive</h1>
+    <video id="video" controls></video>
+    <div id="playlist"></div>
+
+    <!-- Add your script.js -->
+    <script src="/static/script.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const video = document.getElementById("video");
+        const playlist = document.getElementById("playlist");
+        let currentVideoIndex = 0;
+
+        // Array of video sources
+        const videoSources = [
+          {
+            title: "Class of 1999",
+            url: "https://morvexstar21.live/file1/DDsQo+r8A+aLEOXKP+mGO9nO9P78OyS1wAqTL2QgHxtGz7ddnErsnTekQXyIUkzqcAwAF1xN7dKy~dCdz9SPjZNHYfbkrnRRUC7X2j7jB4CzrwOW6EAOw3vS382eq1K0m5zMuVtI53jsVK~ffmOTnBqYNTjKx8b7EKKYhIdLs2Q=/MTA4MA==/aW5kZXgubTN1OA==.m3u8",
+          },
+          // Add more videos here in the same format
+          {
+            title: "Prayer of the Rollerboys",
+            url: "https://jornexwave10.pro/file1/JACKNm9iTbEzwjLCSWtcc3D9pA+u8gJoDM+nQSxrBWmL1TpGfP9zl1BAOuykmJBHB63eMmy7gMD~94ztynsU6u9UDYAG33cdZQ+cFSB8eE~dzVfX57p53PU1P+JAko9ugTQ~5srF6Rv1LRg7yfgsMO0EePcM2ltmGn4C6LoNix0=/MzYw/aW5kZXgubTN1OA==.m3u8",
+          },
+          {
+            title: "They Live",
+            url: "https://morvexstar21.live/file1/df3XNFYVnImSEXfS0EHYCmvDTLG4jQ~INLK9f5Od3GscwErw6kJO2p0a159QsQyYJFCNLkWXu9pzPHhcsOV~1kh3Y4xMy7yTUHO9ZXiGKrMQh6QsZ5iMKNWDVeCJ6tdAXKKMRqeotai1aTpdVQk1hoqIkydoS6e9ZETkpP8OKyk=/MTA4MA==/aW5kZXgubTN1OA==.m3u8",
+          },
+          {
+            title: "Wargames",
+            url: "https://florvexlight23.xyz/file1/AadEAVGP7dsFq6i7cBw8VerUtFP~fsqzSNz26K0UC+4PCQZbpxI2RWflKu+ua+KO7NF7NsjqMViInVk+oNiHTX0LZ~YNax+QOiAWXEnJArtgBch8muMS55hjrf5ii+ca4ICH4BZdO5hJn1xA4GMLdfZ4dQfz4DVgukA1W2VW5Ds=/MTA4MA==/aW5kZXgubTN1OA==.m3u8",
+          },
+          {
+            title: "Hackers",
+            url: "https://fenvixlight88.pro/file1/r1NDfTkEVkf9NeQnZLh~4Dtsz8TH7Dl0u9zyY2usa8~tDOUfSJB2n~96uG+xP4M0BH9s00cCkccNiyo~LLXNBmPlnSGJwpyiIsUjBYWBrzyFca5Eq5qftVWx6M8aTnQQhyDIwTznqraE2foOypTHL7ugQW0DNy0~+PAAzDsJGUA=/NzIw/aW5kZXgubTN1OA==.m3u8",
+          },
+          {
+            title: "Antitrust",
+            url: "https://blornixcloud65.xyz/file1/qxB+Mo3QHMM6LkAwGBQVSp5OhhI6lUkajcRWWiTd~WAKvWB9pZASxMludcAVYKbJphcLn8ekrdtldyBrOtFeQuox+toWHNeRRmETQ1u4p3p9xvJMk4D1nhIoOutbEkwMx2oPNIIrSq7KmOYVOWSzCCI75pbtIGNWKuZ0+0tn4uI=/MTA4MA==/aW5kZXgubTN1OA==.m3u8",
+          },
+          {
+            title: "PI",
+            url: "https://jornexwave10.pro/file1/GFGi3aoeDo1yuLWbCE2Z+QLTI9dp3cHKHqua3icylJ7HIaJ8FbrMI4aVEKO5w2gWpcupceaKrcYsZBvAfLFkoJr5LCnik84gH42plIcmTQASTPLrOcAzn4q49wVnW8lCQuU+rR~Nfi+0ctQQQfN33D4kMujw+Q68~aRx04AoouM=/NzIw/aW5kZXgubTN1OA==.m3u8",
+          },
+          {
+            title: "Fear and Loathing in Las Vegas",
+            url: "https://florvexlight23.xyz/file1/rIw+skNCILNxzEHf3rUq8DPpd3QPGg0YDxIjPE0PedWzrw5Oo0+fPsWa0OQdTx~YVNJhfsMofCK5T+qBR8LkrxhehhfGLIlu~KhiokrUswbRA8wXIBgJD8DD~Lx3YslA6w~6hwufNfeOiUoE5AFQ0TZ4M4T0JcocuKdbccPdWkc=/NzIw/aW5kZXgubTN1OA==.m3u8",
+          },
+          {
+            title: "The Stoned Age",
+            url: "https://fenvixlight88.pro/file1/qiRSw56Kki4cZcrYChW9KaNNDRUUehk7utH6lZdjSWfTzFEXdUNgjvaLmolY~EdPEtTik2xrrxaPDyJQT3n1d0MVB2XWgDlbCy9qNFWIbrsUoxi48xKxwizgyzGO3aSrWPjOSBDQzBUgUNENe1vb+bhF9wcLMYP8CrNzFD6TX3I=/NzIw/aW5kZXgubTN1OA==.m3u8",
+          },
+          {
+            title: "Cheech & Chong's Next Movie",
+            url: "https://jornexwave10.pro/file1/R480KmqnyQqopSk566BB5awk7eVkhQ2vzZ18o7T7gu0CUq~hUaADGLFJM~5PBfd4mL3ow4L76iYouwxQKSyaGQsFPlgUvuAppXRYuRptr~jIugpdCR7nCW4uiwqh+nQ+ej7612XOZoIRF66AlNcLkC3Su8wbetBl83yufKoB77Q=/NzIw/aW5kZXgubTN1OA==.m3u8",
+          },
+        ];
+
+        // Create playlist UI
+        function createPlaylist() {
+          videoSources.forEach((video, index) => {
+            const item = document.createElement("div");
+            item.innerHTML = `${video.title}`;
+            item.onclick = () => playVideo(index);
+            item.style.cursor = "pointer";
+            item.style.padding = "10px";
+            playlist.appendChild(item);
+          });
+          updatePlaylistUI();
+        }
+
+        // Update playlist UI to highlight current video
+        function updatePlaylistUI() {
+          Array.from(playlist.children).forEach((item, index) => {
+            item.className = index === currentVideoIndex ? "current-video" : "";
+          });
+        }
+
+        // Play specific video
+        function playVideo(index) {
+          currentVideoIndex = index;
+          loadVideo(videoSources[index].url);
+          updatePlaylistUI();
+        }
+
+        // Load and play video
+        function loadVideo(videoSrc) {
+          if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function () {
+              video.play();
+            });
+          } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+            video.src = videoSrc;
+            video.addEventListener("loadedmetadata", function () {
+              video.play();
+            });
+          }
+        }
+
+        // Play next video when current one ends
+        video.addEventListener("ended", function () {
+          currentVideoIndex++;
+          if (currentVideoIndex < videoSources.length) {
+            playVideo(currentVideoIndex);
+          }
+        });
+
+        // Initialize the first video
+        createPlaylist();
+        playVideo(0);
+      });
+    </script>
+  </body>
+</html>

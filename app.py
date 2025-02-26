@@ -217,7 +217,9 @@ def admin():
 def serve_static(filename):
     return send_from_directory('static', filename)
 
-
+@app.route('/terminal')
+def terminal():
+    return render_template('terminal.html')
 
 @app.route('/api/posts/all')
 def get_all_posts():
@@ -260,6 +262,11 @@ def send_message():
     except Exception as e:
         print(f"Error sending email: {str(e)}")  # For debugging
         return jsonify({'success': False, 'error': str(e)}), 500
+
+# Add this route after your other routes
+@app.route('/stream')
+def stream():
+    return render_template('stream.html')
 
 if __name__ == '__main__':
     init_db()
