@@ -200,9 +200,6 @@ def delete_post(post_id):
 def links():
     return render_template('links.html')
 
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
 
 # Keep this route (this is the one we want to use)
 @app.route('/')
