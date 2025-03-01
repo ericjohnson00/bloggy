@@ -230,7 +230,19 @@
             title: "V for Vendetta",
             url: "https://traxvonlight80.xyz/file1/5XVc89EzH99U5rG8NvjM8PW6+axo~F5jofpl1LpBnn1uKnvabdtkQ5pYxSU1nAE3YsLEBILFBsucusDVsGbJRdGdG94q+ySlJDEnBvRlCssFjvbm8prMG4p4i2TheBw6O9JsaPNHyGlIpnQLAdOOlICM8F0LNqDC1vpaU7K7zpI=/MTA4MA==/aW5kZXgubTN1OA==.m3u8",
           },
+          {
+            title: "1984",
+            url: "https://fenvixlight88.pro/file1/dqg7SkaiVKhCoChxc64sK91eDpxVua36yTbmxgdAsTxlWpFMuQADsggrlpjCl1POip38Wp4UD55VFGd25~hqE43EzO7eZWPwKILloptiRIAGHRLo7GzHcHDBapBwdnwUjUkoXMC8Pt7a~Rfj1kvG2vZs7cXFoMhrcnFKDjs+Dr8=/MTA4MA==/aW5kZXgubTN1OA==.m3u8",
+          },
         ];
+
+        // Sort video sources
+        videoSources.sort((a, b) => {
+          // Remove "The" and "A" from the start of titles for sorting
+          const titleA = a.title.replace(/^(The|A) /, "").toLowerCase();
+          const titleB = b.title.replace(/^(The|A) /, "").toLowerCase();
+          return titleA.localeCompare(titleB);
+        });
 
         // Create playlist UI
         function createPlaylist() {
